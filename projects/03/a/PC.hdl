@@ -19,8 +19,10 @@ CHIP PC {
     // Put your code here:
     Register(in=regin, load=true, out=regout, out=out);
     Inc16(in=regout, out=inc1out); 
-    // regout讓這裏能夠讀到上個時間點儲存得值
+    // regout讓這裏能夠讀到上個時間點儲存的值
     Mux16(a=in, b=inc1out,sel=inc,out=afterInc);
+    // 從第一個clock和第二個clock開始想
+    // 會發像這裡的in 就是第一次輸進來得值
     Mux16(a=afterInc,b=in,sel=load,out=afterLoad);
     Mux16(a=afterLoad, b=false, sel=reset, out=regin);    
     
