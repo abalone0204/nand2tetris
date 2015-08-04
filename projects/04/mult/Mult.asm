@@ -22,23 +22,26 @@
 D=M
 @m
 M=D
-// if m == 0 then end
-@End
-D;JEQ
 
 @R1
 D=M
 @n
 M=D
-D=M
-// if n == 0 then end
-@End
-D;JEQ
 
 @i
 M=0
 @result
 M=0
+
+@m
+D=M
+@Zero
+D;JEQ
+
+@n
+D=M
+@Zero
+D;JEQ
 
 // init all vars done
 (Loop)
@@ -58,6 +61,7 @@ D=M-D
 @Loop
 D; JGT
 
+(Zero)
 @result
 D=M
 @R2
