@@ -40,4 +40,36 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    // Instruction handling
+    Mux16(a=instruction, b=ALUinstructionoutput, sel=instruction[15], out=AorCoutput);
+    Not(in=instruction[15], out=Atype);
+    Or(a=Atype, b=instruction[5], out=Aload);
+    ARegister(in=AorCoutput, load=Aload, out=AinputFromRegisterA, out=PCinputFromRegisterA, out[0..14]=addressM);
+    
+    // Instruction executing
+    // ALU : A part
+    // A= M -> this kind of computation will use inM as A
+    Mux16(a=AinputFromRegisterA, b=inM, sel=instruction[12], out=ALUinputA);
+    
+    // ALU : D part
+    Or(a=instruction[4], b=Atype, out=Dload);
+    DRegister(in=Dinput, load=Dload, out=ALUinputD);
+    ALU(x=ALUinputD, zx=instruction[11], nx=instruction[10], 
+        y=ALUinputA, zy=instruction[9], ny=instruction[8], 
+        f=instruction[7], no=instruction[6], out=ALUoutM, out=Dinput, out=ALUinstructionoutput);
+    // Mux16(a=instruction[0..14], b=DinputFromALU, sel=instruction[])
+    // DMux(a= ,b=writeToM, sel=instruction[3])
+    And(a=instruction[3], b=instruction[15], out=writeM, out=outMsel);
+    Mux16(a=false, b=ALUoutM, sel=outMsel, out=outM);
+
+    // Next instruction fetching
+    // if reset ==1
+    //   PCinputFromRegisterA
+
+    Or(a=instruction[0], b=instruction[1], out=Orj3j2);
+    Or(a=Orj3j2, b=instruction[2], out=Orj3j2j1);
+    And(a=instruction[15], b=Orj3j2j1, out=determinePC);
+    DMux(in=true, sel=determinePC, a=PCinc, b=PCload);
+    PC(in=PCinputFromRegisterA, load=PCload, inc=PCinc, reset=reset, out[0..14]=pc);
+
 }
