@@ -41,27 +41,28 @@ CHIP CPU {
     PARTS:
     // Put your code here:
     // Instruction handling
-    Mux16(a=instruction, b=ALUinstructionoutput, sel=instruction[15], out=AorCoutput);
+    Mux16(a=instruction, b=outALUtoA, sel=instruction[15], out=AReginput);
     Not(in=instruction[15], out=Atype);
-    Or(a=Atype, b=instruction[5], out=Aload);
-    ARegister(in=AorCoutput, load=Aload, out=AinputFromRegisterA, out=PCinputFromRegisterA, out[0..14]=addressM);
+    Or(a=instruction[5],b=Atype,out=Aload);
+    ARegister(in=AReginput, load=Aload, out=outRegA, out=outPC, out[0..14]=addressM);
+
     
     // Instruction executing
-    // ALU : A part
-    // A= M -> this kind of computation will use inM as A
-    Mux16(a=AinputFromRegisterA, b=inM, sel=instruction[12], out=ALUinputA);
+    //  ALU : A part
+    Mux16(a=outRegA, b=inM, sel=instruction[12], out=inputALUA);
     
-    // ALU : D part
-    Or(a=instruction[4], b=Atype, out=Dload);
-    DRegister(in=Dinput, load=Dload, out=ALUinputD);
-    ALU(x=ALUinputD, zx=instruction[11], nx=instruction[10], 
-        y=ALUinputA, zy=instruction[9], ny=instruction[8], 
-        f=instruction[7], no=instruction[6], out=ALUoutM, out=Dinput, out=ALUinstructionoutput);
-    // Mux16(a=instruction[0..14], b=DinputFromALU, sel=instruction[])
-    // DMux(a= ,b=writeToM, sel=instruction[3])
-    And(a=instruction[3], b=instruction[15], out=writeM, out=outMsel);
-    Mux16(a=false, b=ALUoutM, sel=outMsel, out=outM);
+    //  ALU : D part
+    And(a=instruction[15], b=instruction[4], out=Dload);
+    DRegister(in=outALUtoD, load=Dload, out=inputALUD);
+    
+    // ALU
+    ALU(x=inputALUD, y=inputALUA, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], 
+    out=outALUtoD, out=outALUtoA, out=outALUtooutM);
 
+    // writeM
+    And(a=instruction[15], b=instruction[3], out=writeMornot, out=writeM);
+    Mux16(a=false, b=outALUtooutM, sel=writeMornot, out=outM);
+    
     // Next instruction fetching
     // if reset ==1
     //   PCinputFromRegisterA
@@ -70,6 +71,6 @@ CHIP CPU {
     Or(a=Orj3j2, b=instruction[2], out=Orj3j2j1);
     And(a=instruction[15], b=Orj3j2j1, out=determinePC);
     DMux(in=true, sel=determinePC, a=PCinc, b=PCload);
-    PC(in=PCinputFromRegisterA, load=PCload, inc=PCinc, reset=reset, out[0..14]=pc);
+    PC(in=outPC, load=PCload, inc=PCinc, reset=reset, out[0..14]=pc);
 
 }
