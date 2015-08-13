@@ -8,6 +8,14 @@ var L_COMMAND = "L";
 parser.hello = function() {
     console.log("parser's hello");
 };
+
+var matchWith = function(sign) {
+    var re = "(.*)" + sign + "(.*)";
+    return this.match(re);
+};
+
+String.prototype.matchWith = matchWith;
+
 var removeWhiteSpace = function(instruction) {
     return instruction.replace(/\s/g, '');
 };
@@ -20,7 +28,7 @@ var differAorC = function(instruction) {
         return L_COMMAND;
     } else {
         return C_COMMAND;
-    };
+    }
 };
 
 var parseInstructionA = function(instruction) {
@@ -34,23 +42,25 @@ var parseInstructionA = function(instruction) {
     return underlyingFields;
 };
 
+
+
 var parseInstructionC = function(instruction) {
     var dest;
     var computation;
     var jump;
-    if (instruction.match(/(.+)=(.+)/)) {
-        var insD = instruction.match(/(.+)=(.+)/);
+    if (instruction.matchWith('=')) {
+        var insD = instruction.matchWith('=');
         dest = insD[1]
-        if (insD[2].match(/(.+);(.+)/)) {
-            var insDWithJump = insD[2].match(/(.+);(.+)/);
+        if (insD[2].matchWith(';')) {
+            var insDWithJump = insD[2].matchWith(';');
             computation = insDWithJump[1];
             jump = insDWithJump[2];
         } else {
             computation = insD[2];
         }
     } else {
-        dest = instruction.match(/(.+);(.+)/)[1];
-        jump = instruction.match(/(.+);(.+)/)[2];
+        dest = instruction.matchWith(';')[1];
+        jump = instruction.matchWith(';')[2];
     }
     var underlyingFields = {
         commanType: C_COMMAND,
@@ -89,5 +99,6 @@ var parseInstruction = function(instruction) {
     }
 
 }
+
 parser.parse = parseInstruction;
 module.exports = parser;
