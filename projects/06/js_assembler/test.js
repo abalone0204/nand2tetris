@@ -4,12 +4,13 @@ var parser = require('./parser')
 var code = require('./code');
 var symbolTable = require("./symbolTable");
 
-var instructionA = "   @20   ";
+var instructionA = "   @2   ";
 var instructionCNoJump = "D = M+1";
 var instructionCJump = "D = M+1 ; JMP";
 var instructionJump = "0; JMP"
 var instructionL = "( hello )";
 
+// Parser test:
 console.log('A type:');
 console.log(parser.parse(instructionA));
 console.log('======');
@@ -25,3 +26,9 @@ console.log('======');
 console.log('Label:');
 console.log(parser.parse(instructionL));
 console.log('end');
+
+// Code test
+
+var translate = code.translate;
+console.log('TRANSLATE:');
+console.log(translate(parser.parse(instructionA)));

@@ -13,7 +13,6 @@ var matchWith = function(sign) {
     var re = "(.*)" + sign + "(.*)";
     return this.match(re);
 };
-
 String.prototype.matchWith = matchWith;
 
 var removeWhiteSpace = function(instruction) {
@@ -31,11 +30,12 @@ var differAorC = function(instruction) {
     }
 };
 
+
 var parseInstructionA = function(instruction) {
     var opCode = instruction[0];
     var register = instruction.slice(1, instruction.length);
     var underlyingFields = {
-        commanType: A_COMMAND,
+        commandType: A_COMMAND,
         opCode: opCode,
         register: register
     };
@@ -63,7 +63,7 @@ var parseInstructionC = function(instruction) {
         jump = instruction.matchWith(';')[2];
     }
     var underlyingFields = {
-        commanType: C_COMMAND,
+        commandType: C_COMMAND,
         dest: dest,
         computation: computation,
         jump: jump
@@ -74,12 +74,13 @@ var parseInstructionC = function(instruction) {
 var parseInstructionL = function(instruction) {
     var labelName = instruction.match(/^\((.+)\)$/)[1];
     var underlyingFields = {
-        commanType: L_COMMAND,
+        commandType: L_COMMAND,
         labelName: labelName
     };
     return underlyingFields;
 };
 
+// Main function
 var parseInstruction = function(instruction) {
     instruction = removeWhiteSpace(instruction);
     var commandType = differAorC(instruction);
