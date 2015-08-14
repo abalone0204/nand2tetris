@@ -64,102 +64,83 @@ var dealJump = function(jump) {
 };
 
 
-
-var zeroD = function(n) {
-    this[1] = n;
-    return this;
-};
-var negD = function(n) {
-    this[2] = n;
-    return this;
-};
-var zeroA = function(n) {
-    this[3] = n;
-    return this;
-};
-var negA = function(n) {
-    this[4] = n;
-    return this;
-};
-
-var f = function(n) {
-    this[5] = n;
-    return this;
-};
-
-var no = function(n) {
-    this[6] = n;
-    return this;
-};
-
-Array.prototype.zeroD = zeroD;
-Array.prototype.zeroA = zeroA;
-Array.prototype.negD = negD;
-Array.prototype.negA = negA;
-Array.prototype.f = f;
-Array.prototype.no = no;
-
 var dealComp = function(comp) {
-    var result = [0, 0, 0, 0, 0, 0, 0];
-    if (result === undefined) {
-        return result.join('');
-    }
-    if (comp === '0') {
-        return result
-            .zeroA(1)
-            .zeroD(1)
-            .f(1);
-    }
-    if (comp === '1') {
-        return result
-            .zeroA(1)
-            .zeroD(1)
-            .negD(1)
-            .negA(1)
-            .f(1)
-            .no(1);
-    }
-    if (comp === '-1') {
-        return result
-            .zeroA(1)
-            .zeroD(1)
-            .negD(1)
-            .f(1)
-    }
-
+    var a = '0';
     if (comp.match(/M/)) {
-        result[0] = 1;
-    } 
-
-    if (comp.match(/D/)) {
-        result.zeroD(0);
-    } else {
-        result.zeroD(1);
+        a = '1';
     }
-
-    if(comp.match(/A/)) {
-        result.zeroA(0);
-    } else {
-        result.zeroA(1);
+    // idiot way
+    switch (comp) {
+        case '0':
+            return a + '101010';
+            break;
+        case '1':
+            return a + '111111';
+            break;
+        case '-1':
+            return a + '111010';
+            break;
+        case 'D':
+            return a + '001100';
+            break;
+        case 'A':
+        case 'M':
+            return a + '110000';
+            break;
+        case '!D':
+            return a + '001101';
+        case '!A':
+        case '!M':
+            return a + '110001';
+            break;
+        case '-D':
+            return a + '001101';
+            break;
+        case '-A':
+        case '-M':
+            return a + '110011';
+            break;
+        case 'D+1':
+            return a + '011111';
+            break;
+        case 'A+1':
+        case 'M+1':
+            return a + '110111';
+            break;
+        case 'D-1':
+            return a + '011111';
+            break;
+        case 'A-1':
+        case 'M-1':
+            return a + '110010';
+            break;
+        case 'D+A':
+        case 'D+M':
+            return a + '000010';
+            break;
+        case 'D-A':
+        case 'D-M':
+            return a + '010011';
+            break;
+        case 'A-D':
+        case 'M-D':
+            return a + '000111';
+            break;
+        case 'D&M':
+        case 'D&A':
+            return a+'000000';
+            break;
+        case 'D|A':
+        case 'D|M':
+            return a+'010101';
+            break;
     }
-
-    if (comp.match(/\+/)) {
-        result.f(1);
-    }
-
-    if (comp.match(/\!([DAM])/)) {
-        result.f(1);
-    }
-
-
-    return result.join('');
 }
 
 var transC = function(underlyingFields) {
     var destCode = dealDest(underlyingFields.dest);
-    var compCode = dealComp(underlyingFields.computation);
+    var compCode = dealComp(underlyingFields.comp);
     var jumpCode = dealJump(underlyingFields.jump);
-    // console.log("dest: "+destCode);
     return '111' + compCode + destCode + jumpCode;
 };
 // Main function

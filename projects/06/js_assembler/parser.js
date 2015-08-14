@@ -32,11 +32,9 @@ var differAorC = function(instruction) {
 
 
 var parseInstructionA = function(instruction) {
-    var opCode = instruction[0];
     var register = instruction.slice(1, instruction.length);
     var underlyingFields = {
         commandType: A_COMMAND,
-        opCode: opCode,
         register: register
     };
     return underlyingFields;
@@ -46,17 +44,17 @@ var parseInstructionA = function(instruction) {
 
 var parseInstructionC = function(instruction) {
     var dest;
-    var computation;
+    var comp;
     var jump;
     if (instruction.matchWith('=')) {
         var insD = instruction.matchWith('=');
         dest = insD[1]
         if (insD[2].matchWith(';')) {
             var insDWithJump = insD[2].matchWith(';');
-            computation = insDWithJump[1];
+            comp = insDWithJump[1];
             jump = insDWithJump[2];
         } else {
-            computation = insD[2];
+            comp = insD[2];
         }
     } else {
         dest = instruction.matchWith(';')[1];
@@ -66,7 +64,7 @@ var parseInstructionC = function(instruction) {
     var underlyingFields = {
         commandType: C_COMMAND,
         dest: dest,
-        computation: computation,
+        comp: comp,
         jump: jump
     };
 
