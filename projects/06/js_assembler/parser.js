@@ -62,12 +62,14 @@ var parseInstructionC = function(instruction) {
         dest = instruction.matchWith(';')[1];
         jump = instruction.matchWith(';')[2];
     }
+
     var underlyingFields = {
         commandType: C_COMMAND,
         dest: dest,
         computation: computation,
         jump: jump
     };
+
     return underlyingFields;
 };
 
