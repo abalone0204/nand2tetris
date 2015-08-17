@@ -1,13 +1,5 @@
 // Stage 1
-var C_ARITHMETIC = 'arithemetic';
-var C_PUSH = 'push',
-    C_POP = 'pop';
-// Stage 2
-var C_LABEL;
-var C_GOTO, C_IF;
-var C_FUNCTION;
-var C_RETURN;
-var C_CALL;
+var C= require('../constants.js');
 
 var arithOps = ['add', 'sub', 'neg',
     'eq', 'gt', 'lt',
@@ -30,7 +22,7 @@ function setCommandType(stream) {
     streamObject.command = stream;
     var op = streamObject.command.split(" ")[0];
     if (matchArithmetic(op)) {
-        streamObject.commandType = C_ARITHMETIC;
+        streamObject.commandType = C.ARITHMETIC;
     } else if (matchMemoryAccess(op)) {
         streamObject.commandType = op;
     } else {
