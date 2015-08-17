@@ -8,7 +8,7 @@ function getStream(input) {
     return input.dataStream.map((fileStream) => {
         return {
             path: fileStream.path,
-            stream: fileStream.stream
+            streams: fileStream.stream
                 .map((inputStream) => {
                     return inputStream
                         .replace(/\/\/.+/, '')
@@ -31,7 +31,7 @@ function parse(path) {
     return fileStreams.map((fileStream) => {
         return {
             path: fileStream.path,
-            stream: fileStream.stream
+            streams: fileStream.streams
                 .map((stream) => {
                     return setCommandType(stream);
                 })

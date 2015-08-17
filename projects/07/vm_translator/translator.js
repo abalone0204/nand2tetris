@@ -1,8 +1,7 @@
-var parse = require('./parser').parse;
 var path = process.argv[2];
+var parse = require('./parser').parse;
+var codeWrite = require('./codeWriter').codeWrite;
+var parsedStreams = parse(path);
 
-var parsedStream = parse(path);
+codeWrite(parsedStreams);
 
-parsedStream.forEach((ps) => {
-    console.log(ps.stream);
-});
