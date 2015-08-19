@@ -8,6 +8,6 @@ var C = {
     FUNCTION: 'function',
     RETURN: 'return',
     CALL: 'call'
-}
+};
 
 module.exports = C
