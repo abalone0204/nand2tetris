@@ -1,21 +1,30 @@
-var fs=require('fs');
+var fs = require('fs');
 var path = require('path');
 var C = require('../constants.js')
 var asm = require('../asm_components.js');
 var GOTO_TOP_STACK = asm.GOTO_TOP_STACK;
 var SP_INC = asm.SP_INC;
 var commandIndex = 0;
-function logicalASM(command) {
+
+function comparisonASM(command) {
     var op = command.toUpperCase();
-    var templatePath = path.join(__dirname, "../asm_templates/logical.asm")
-    var logicalTemplate = fs.readFileSync(templatePath).toString();
+    var templatePath = path.join(__dirname, "../asm_templates/comparison.asm")
+    var comparisonTemplate = fs.readFileSync(templatePath).toString();
     // var ltStream = logicalTemplate.split("\n")
-    ltStream = logicalTemplate
-    .replace(/\$/g, commandIndex)
-    .replace(/{.+}/, op);
-    commandIndex+=1;
+    cpStream = comparisonTemplate
+        .replace(/\$/g, commandIndex)
+        .replace(/{.+}/, op);
+    commandIndex += 1;
     return ltStream
 };
+
+function logicalASM(command) {
+    var op = command === "and" ? "&" : "|";
+    var templatePath = path.join(__dirname, "../asm_templates/logical.asm");
+    var lgStream = fs.readFileSync(templatePath)
+        .toString().replace(/{.+}/, op);
+    return lgStream;
+}
 function translate(command) {
     switch (command) {
         case 'add':
@@ -33,6 +42,10 @@ function translate(command) {
         case 'gt':
         case 'lt':
         case 'eq':
+            return comparisonASM(command);
+            break;
+        case 'and':
+        case 'or':
             return logicalASM(command);
             break;
         default:

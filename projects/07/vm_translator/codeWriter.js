@@ -11,14 +11,14 @@ function getStream(parsedStreams) {
         .map((codeStream) => {
             return {
                 path: codeStream.path,
-                streams: codeStream.streams
+                streams: codeStream
+                    .streams
                     .map((command) => {
-                        // return command;
                         return writeArithmetic(command);
                     })
-                // .map((command) => {
-                //     return writePushPop(command)
-                // })
+                    .map((command) => {
+                        return writePushPop(command)
+                    })
             }
         })
 
