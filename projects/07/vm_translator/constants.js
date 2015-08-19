@@ -1,5 +1,5 @@
 var C = {
-    ARITHMETIC: 'arithemetic',
+    ARITHMETIC: 'arithmetic',
     PUSH: 'push',
     POP: 'pop',
     LABEL: 'label',

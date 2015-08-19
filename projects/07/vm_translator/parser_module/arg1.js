@@ -1,7 +1,7 @@
-var C_ARITHMETIC = 'arithemetic';
+var C=require('../constants.js');
 
 function setArg1(stream) {
-    if (stream.commandType === C_ARITHMETIC) {
+    if (stream.commandType === C.ARITHMETIC) {
         stream.arg1 = stream.command;
     } else {
         stream.arg1 = stream.command.split(" ")[1];
