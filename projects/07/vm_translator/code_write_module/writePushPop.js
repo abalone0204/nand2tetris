@@ -8,6 +8,13 @@ var segments = {
     THAT: 'THAT'
 }
 
+function pushStatic(command, pathName) {
+    var templatePath = path.join(__dirname, "../asm_templates/" + command.commandType + "/static.asm");
+    var fileName = pathName.match(/\/(.+).asm/)[1];
+    return fs.readFileSync(templatePath).toString()
+        .replace(/{.+}/g, fileName)
+        .replace(/\$/g, command.arg2);
+}
 
 function pushLatt(command) {
     var templatePath = path.join(__dirname, "../asm_templates/" + command.commandType + "/latt.asm");
@@ -34,7 +41,7 @@ function pushConstant(command) {
     return fs.readFileSync(templatePath).toString().replace(/\$/g, command.arg2);
 };
 
-function translate(command) {
+function translate(command, path) {
     if (command.commandType === C.PUSH) {
         switch (command.arg1) {
             case 'constant':
@@ -52,6 +59,9 @@ function translate(command) {
             case 'temp':
                 return pushTemp(command);
                 break;
+            case 'static':
+                return pushStatic(command, path);
+                break;
             default:
                 return "not yet"
                 break;
@@ -60,11 +70,11 @@ function translate(command) {
     return 'shiiiitt';
 }
 
-function writePushPop(command) {
+function writePushPop(command, path) {
     if (command.commandType === C.ARITHMETIC) {
         return command;
     }
-    command.asmCode = translate(command);
+    command.asmCode = translate(command, path);
     return command;
 }
 

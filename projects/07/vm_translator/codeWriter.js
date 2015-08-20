@@ -17,7 +17,7 @@ function getStream(parsedStreams) {
                          return writeArithmetic(command);
                      })
                     .map((command) => {
-                        return writePushPop(command)
+                        return writePushPop(command, codeStream.path)
                     })
             }
         })
