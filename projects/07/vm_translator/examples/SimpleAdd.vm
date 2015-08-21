@@ -7,3 +7,7 @@
 push constant 7
 push constant 8
 add
+pop argument 2
+pop pointer 1
+pop temp 5
+pop static 4

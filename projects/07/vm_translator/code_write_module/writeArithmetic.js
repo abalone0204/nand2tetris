@@ -15,7 +15,7 @@ function comparisonASM(command) {
         .replace(/\$/g, commandIndex)
         .replace(/{.+}/, op);
     commandIndex += 1;
-    return ltStream
+    return cpStream
 };
 
 function logicalASM(command) {

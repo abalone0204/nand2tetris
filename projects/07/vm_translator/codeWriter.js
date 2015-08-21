@@ -25,26 +25,32 @@ function getStream(parsedStreams) {
 
 }
 
-function writeStream(asmStream) {
-    fs.writeFile(asmStream.path, asmStream.asmCode, {
-        flags: 'wx'
-    }, function(err) {
-        if (err) throw err;
-        console.log("Ole! Ole! Successfully.");
-    });
-    return 
+function writeStream(asmStreams) {
+    asmStreams.forEach((as) => {
+        fs.writeFile(as.path, '', {
+            flags: 'wx'
+        }, function(err) {
+            if (err) throw err;
+            console.log("[NOTICE] "+as.path + " is created successfully.");
+        })
+
+        as.streams.forEach((command)=>{
+            fs.appendFileSync(as.path, command.asmCode);
+        });
+    })
+    return
 }
 
 function codeWrite(parsedStreams) {
-    var asmStream = getStream(parsedStreams);
-    writeStream(asmStream);
-    asmStream.forEach((as) => {
+    var asmStreams = getStream(parsedStreams);
+    writeStream(asmStreams);
+    asmStreams.forEach((as) => {
         console.log(as);
         // console.log(as.streams.map((c) => {
         //     return c
         // }));
     })
-    return asmStream;
+    return asmStreams;
 
 }
 

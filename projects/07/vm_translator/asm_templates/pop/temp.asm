@@ -1,0 +1,17 @@
+@SP
+M=M-1
+A=M
+D=M
+@temp1
+M=D
+@5
+D=A
+@$
+D=A+D
+@temp2
+M=D
+@temp1
+D=M
+@temp2
+A=M
+M=D
