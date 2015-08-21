@@ -38,7 +38,7 @@ function writeStream(asmStreams) {
             fs.appendFileSync(as.path, command.asmCode);
         });
     })
-    return
+    return;
 }
 
 function codeWrite(parsedStreams) {
