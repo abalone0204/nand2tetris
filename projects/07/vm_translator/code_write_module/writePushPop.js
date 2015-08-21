@@ -41,31 +41,41 @@ function pushConstant(command) {
     return fs.readFileSync(templatePath).toString().replace(/\$/g, command.arg2);
 };
 
+function pushDispatcher(command, path) {
+    switch (command.arg1) {
+        case 'constant':
+            return pushConstant(command);
+            break;
+        case 'local':
+        case 'argument':
+        case 'this':
+        case 'that':
+            return pushLatt(command);
+            break;
+        case 'pointer':
+            return pushPointer(command);
+            break;
+        case 'temp':
+            return pushTemp(command);
+            break;
+        case 'static':
+            return pushStatic(command, path);
+            break;
+        default:
+            return "not yet"
+            break;
+    }
+}
+
+function popDispatcher(command, path) {
+    
+}
+
 function translate(command, path) {
     if (command.commandType === C.PUSH) {
-        switch (command.arg1) {
-            case 'constant':
-                return pushConstant(command);
-                break;
-            case 'local':
-            case 'argument':
-            case 'this':
-            case 'that':
-                return pushLatt(command);
-                break;
-            case 'pointer':
-                return pushPointer(command);
-                break;
-            case 'temp':
-                return pushTemp(command);
-                break;
-            case 'static':
-                return pushStatic(command, path);
-                break;
-            default:
-                return "not yet"
-                break;
-        }
+        return pushDispatcher(command, path);
+    } else {
+        return popDispatcher(command, path);
     };
     return 'shiiiitt';
 }
